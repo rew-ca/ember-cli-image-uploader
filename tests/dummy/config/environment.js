@@ -16,6 +16,10 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+    },
+
+    cloudinary: {
+      cloudName: 'dfk3jxiqp'  
     }
   };
 
@@ -40,7 +44,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    ENV.cloudinary.cloudName = '';
   }
 
   return ENV;

@@ -1,0 +1,20 @@
+{{#if uploadError}}
+    <div class="message message-danger">
+        {{uploadError}}
+    </div>
+{{/if}}
+{{yield}}
+{{#if uploading}}
+    <div class="overlay">
+        {{#if progressPercent}}
+            <progress min="0" max="100" {{bind-attr value=progressPercent}}></progress>
+        {{else}}
+            <div class="spinner"></div>
+        {{/if}}
+    </div>
+{{/if}}
+{{#if isDraggingOver}}
+    <div class="overlay text-center text-info">
+        <strong>Drop file{{#if multiple}}s{{/if}} here</strong>
+    </div>
+{{/if}}

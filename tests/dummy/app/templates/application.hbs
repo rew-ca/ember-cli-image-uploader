@@ -1,17 +1,15 @@
-{{#image-uploader action="replaceImage"}}
+{{#image-uploader upload-preset="broker" action="replaceImage"}}
     <div class="col-xs-4 flex-p0">
-        <label class="control-label width-100">Profile picture:</label>
-        <div class="form-subtext"><em>Min 100x100px</em></div>
-        <div class="form-subtext">
-            <label>
-                replace image
-                <input type="file" class="hidden" />
-            </label>
-            <br />
-            (or drag &amp; drop)
-        </div>
+        <label>
+            replace image
+            <input type="file" class="hidden" />
+        </label>
+        <br />
+        (or drag &amp; drop)
     </div>
-    <div class="col-xs-8 flex-p0">
-        <img {{bind-attr src=model.imageUrl}} style="height:100px;" />
-    </div>                    
+    {{#if model.imageUrl}}
+        <div class="col-xs-8 flex-p0">
+            <img {{bind-attr src=model.imageUrl}} style="height:100px;" />
+        </div> 
+    {{/if}}      
 {{/image-uploader}}

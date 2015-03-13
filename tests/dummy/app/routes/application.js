@@ -11,7 +11,7 @@ export default Ember.Route.extend({
     actions: {
 
         replaceImage: function(imageUrls) {
-            this.modelFor(this.routeName).set('image', imageUrls[0]);
+            this.modelFor(this.routeName).set('imageUrl', imageUrls[0]);
         }
 
     }

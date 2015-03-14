@@ -3,6 +3,14 @@ import config from '../config/environment';
 
 export default Ember.Component.extend({
   
+    init: function() {
+        this._super.apply(this, arguments);
+
+        if (!this.get('upload-preset'))
+            throw new Error('upload-preset attribute missing.');
+
+    },
+
     classNames: ['relative', 'clearfix', 'image-upload-target'],
 
     classNameBindings: ['isDraggingOver:active'],
@@ -121,7 +129,7 @@ export default Ember.Component.extend({
             uploadError: null
         });
 
-        this.sendAction('action', [response.secure_url]);
+        this.sendAction('action', [response.secure_url.replace('/image/upload/', '/image/upload/{transformations}/')]);
     },
 
     error: function (e) {

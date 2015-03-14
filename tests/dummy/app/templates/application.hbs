@@ -9,7 +9,9 @@
     </div>
     {{#if model.imageUrl}}
         <div class="col-xs-8 flex-p0">
-            <img {{bind-attr src=model.imageUrl}} style="height:100px;" />
+            {{image-transform url=model.imageUrl width="400" height="200"}}            
         </div> 
     {{/if}}      
 {{/image-uploader}}
+
+

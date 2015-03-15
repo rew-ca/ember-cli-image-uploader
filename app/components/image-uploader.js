@@ -129,7 +129,7 @@ export default Ember.Component.extend({
             uploadError: null
         });
 
-        this.sendAction('action', [response.secure_url.replace('/image/upload/', '/image/upload/{transformations}/')]);
+        this.sendAction('action', [response.secure_url]);
     },
 
     error: function (e) {

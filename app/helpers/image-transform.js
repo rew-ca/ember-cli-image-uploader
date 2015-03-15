@@ -12,7 +12,7 @@ export function imageTransform(params, hash) {
     if (!hash.url)
         throw new Error('url is required.');
 
-    var url = hash.url.replace('{transformations}', transformers.join(','));
+    var url = hash.url.replace('/image/upload/', '/image/upload/' + transformers.join(',') + '/');
 
     return new Ember.Handlebars.SafeString('<img src="' + url + '" />');
 }

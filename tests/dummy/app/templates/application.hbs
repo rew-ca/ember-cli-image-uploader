@@ -7,11 +7,9 @@
         <br />
         (or drag &amp; drop)
     </div>
-    {{#if model.imageUrl}}
-        <div class="col-xs-8 flex-p0">
-            {{image-transform url=model.imageUrl width="400" height="200"}}            
-        </div> 
-    {{/if}}      
+    <div class="col-xs-8 flex-p0">
+        {{image-transform url=model.imageUrl placeholder="Logo" width="400" height="200"}}            
+    </div> 
 {{/image-uploader}}
 
 

@@ -1,20 +1,33 @@
 import Ember from 'ember';
 
 export function imageTransform(params, hash) {
-    var transformers = ['c_fit'];
+
+    if (hash.url) {
+        var transformers = ['c_fit'];
+
+        if (hash.width)
+            transformers.push('w_' + hash.width);
+
+        if (hash.height)
+            transformers.push('h_' + hash.height);
+
+        var url = hash.url.replace('/image/upload/', '/image/upload/' + transformers.join(',') + '/');
+
+        return new Ember.Handlebars.SafeString('<img src="%@" />'.fmt(url));
+    }
+
+    var dimensions = [];
 
     if (hash.width)
-        transformers.push('w_' + hash.width);
+        dimensions.push(hash.width);
 
     if (hash.height)
-        transformers.push('h_' + hash.height);
+        dimensions.push(hash.height);
 
-    if (!hash.url)
-        throw new Error('url is required.');
+    hash.placeholder = hash.placeholder || '%20';
 
-    var url = hash.url.replace('/image/upload/', '/image/upload/' + transformers.join(',') + '/');
+    return new Ember.Handlebars.SafeString('<img src="https://placehold.it/%@&text=%@" />'.fmt(dimensions.join('x'), hash.placeholder));
 
-    return new Ember.Handlebars.SafeString('<img src="' + url + '" />');
 }
 
 export default Ember.HTMLBars.makeBoundHelper(imageTransform);

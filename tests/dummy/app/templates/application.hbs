@@ -1,15 +1,13 @@
 {{#image-uploader upload-preset="broker" action="replaceImage"}}
-    <div class="col-xs-4 flex-p0">
-        <label>
-            replace image
-            <input type="file" class="hidden" />
-        </label>
-        <br />
-        (or drag &amp; drop)
-    </div>
-    <div class="col-xs-8 flex-p0">
-        {{image-transform url=model.imageUrl placeholder="Logo" width="400" height="200" class="my-class-name"}}            
-    </div> 
+    <label>
+        <div class="col-xs-4 flex-p0">
+                replace image
+                <input type="file" style="display:none;" />
+            <br />
+            (or drag &amp; drop)
+        </div>
+        <div class="col-xs-8 flex-p0">
+            {{image-transform url=model.imageUrl placeholder="Logo" width="400" height="200" class="my-class-name"}}
+        </div>
+  </label>
 {{/image-uploader}}
-
-

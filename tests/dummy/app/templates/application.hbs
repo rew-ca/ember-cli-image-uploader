@@ -7,6 +7,9 @@
             (or drag &amp; drop)
         </div>
         <div class="col-xs-8 flex-p0">
+            {{image-transform url=model.imageUrl placeholder="Photo" crop="thumb" radius="max" gravity="face" width="200" height="200" class="my-class-name"}}
+        </div>
+        <div class="col-xs-8 flex-p0">
             {{image-transform url=model.imageUrl placeholder="Logo" width="400" height="200" class="my-class-name"}}
         </div>
   </label>

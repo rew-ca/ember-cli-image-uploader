@@ -11,7 +11,18 @@ export function imageTransform(params, hash) {
     }, this);
 
     if (hash.url) {
-        var transformers = ['c_fit'];
+        var transformers = [];
+
+        if (hash.crop)
+            transformers.push('c_' + hash.crop);
+        else
+            transformers.push('c_fit');
+
+        if (hash.gravity)
+            transformers.push('g_' + hash.gravity);
+
+        if (hash.radius)
+            transformers.push('r_' + hash.radius);
 
         if (hash.width)
             transformers.push('w_' + hash.width);

@@ -7,7 +7,7 @@
 {{#if uploading}}
     <div class="overlay">
         {{#if progressPercent}}
-            <progress min="0" max="100" {{bind-attr value=progressPercent}}></progress>
+            <progress min="0" max="100" value={{progressPercent}}></progress>
         {{else}}
             <div class="spinner"></div>
         {{/if}}

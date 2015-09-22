@@ -1,8 +1,10 @@
 import Ember from 'ember';
+import ajax from 'ic-ajax';
 import layout from '../templates/components/image-uploader';
 const {
   Component,
-  computed
+  computed,
+  on
 } = Ember;
 const { alias } = computed;
 
@@ -16,22 +18,35 @@ export default Component.extend({
   isDraggingOver:    false,
   multiple:          false, // cloudinary doesn't support multiple uploads. it will return the second image uploaded
   progressPercent:   0,
+  publicId:          null,
+  timestamp:         null,
+  signature:         null,
   uploadError:       null,
   uploading:         false,
-  'upload-preset':   '',
+  uploadPreset:      null,
   _ignoreNextLeave:  false,
 
-  checkForUploadPreset: function() {
-    if (!this.get('upload-preset')) {
-      throw new Error('upload-preset attribute missing.');
+  formData: computed('publicId', 'signature', 'timestamp', function(){
+    let formData = new FormData();
+    formData.append('public_id', this.get('publicId'));
+    formData.append('signature', this.get('signature'));
+    formData.append('timestamp', this.get('timestamp'));
+    if (this.get('uploadPreset')) {
+      formData.append('upload-preset', this.get('uploadPreset'));
     }
-  }.on('init'),
 
-  setConfig: function(){
+    for (var i = 0; i < files.length; i++) {
+      formData.append('file', files[i]);
+      if (!this.get('multiple')) { break; }
+    }
+    return formData;
+  }),
+
+  setConfig: on('init', function(){
     // Current method described as how to get the consuming apps' config.
     // See: http://discuss.emberjs.com/t/best-practices-accessing-app-config-from-addon-code/7006/13
     this.set('config', this.container.lookupFactory('config:environment'));
-  }.on('init'),
+  }),
 
   dragEnter(e) {
     // dragEnter and dragLeave logic inspired by http://stackoverflow.com/a/20976009/188740
@@ -67,6 +82,15 @@ export default Component.extend({
     this.upload(e.target.files);
   },
 
+  ajaxOptions(){
+    return {
+      type: 'POST',
+      url: 'https://api.cloudinary.com/v1_1/' + this.get('cloudName') + '/image/upload',
+      contentType: 'application/json',
+      data: this.dataPayload()
+    };
+  },
+
   upload(files) {
     this.setProperties({
       isDraggingOver: false,
@@ -74,17 +98,14 @@ export default Component.extend({
       progressPercent: 0,
       uploadError: null
     });
+    //
+    // ajax(this.ajaxOptions()).then( ()=> {
+    //
+    // }, (response)=> {
+    //
+    // });
 
-    let formData = new FormData();
-
-    for (var i = 0; i < files.length; i++) {
-      formData.append('file', files[i]);
-      if (!this.get('multiple')) { break; }
-    }
-
-    formData.append("upload_preset", this.get('upload-preset'));
-
-    var xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();//FIXME: Why this, and not ic-ajax or something?
     xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + this.get('cloudName') + '/image/upload');
 
     xhr.upload.addEventListener('progress', this.progress.bind(this), false);
@@ -92,7 +113,7 @@ export default Component.extend({
     xhr.addEventListener('error', this.error.bind(this), false);
     xhr.addEventListener('abort', this.abort.bind(this), false);
 
-    xhr.send(formData);
+    xhr.send(this.get('formData'));
   },
 
   progress(e) {

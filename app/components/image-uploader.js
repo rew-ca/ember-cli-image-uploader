@@ -26,7 +26,7 @@ export default Component.extend({
   uploadPreset:      null,
   _ignoreNextLeave:  false,
 
-  formData: computed('publicId', 'signature', 'timestamp', function(){
+  formData(files){
     let formData = new FormData();
     formData.append('public_id', this.get('publicId'));
     formData.append('signature', this.get('signature'));
@@ -40,7 +40,7 @@ export default Component.extend({
       if (!this.get('multiple')) { break; }
     }
     return formData;
-  }),
+  },
 
   setConfig: on('init', function(){
     // Current method described as how to get the consuming apps' config.
@@ -82,12 +82,12 @@ export default Component.extend({
     this.upload(e.target.files);
   },
 
-  ajaxOptions(){
+  ajaxOptions(files){
     return {
       type: 'POST',
       url: 'https://api.cloudinary.com/v1_1/' + this.get('cloudName') + '/image/upload',
       contentType: 'application/json',
-      data: this.dataPayload()
+      data: this.formData(files)
     };
   },
 
@@ -98,22 +98,16 @@ export default Component.extend({
       progressPercent: 0,
       uploadError: null
     });
-    //
-    // ajax(this.ajaxOptions()).then( ()=> {
-    //
-    // }, (response)=> {
-    //
-    // });
 
     var xhr = new XMLHttpRequest();//FIXME: Why this, and not ic-ajax or something?
     xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + this.get('cloudName') + '/image/upload');
 
     xhr.upload.addEventListener('progress', this.progress.bind(this), false);
-    xhr.addEventListener('load', this.load.bind(this), false);
-    xhr.addEventListener('error', this.error.bind(this), false);
+    xhr.addEventListener('load', this.handleSuccess.bind(this), false);
+    xhr.addEventListener('error', this.handleError.bind(this), false);
     xhr.addEventListener('abort', this.abort.bind(this), false);
 
-    xhr.send(this.get('formData'));
+    xhr.send(this.formData(files));
   },
 
   progress(e) {
@@ -122,7 +116,7 @@ export default Component.extend({
     this.set('progressPercent', percent);
   },
 
-  load(e) {
+  handleSuccess(e) {
     var response = JSON.parse(e.target.responseText);
 
     if (e.target.status !== 200 && e.target.status !== 201) {
@@ -143,7 +137,7 @@ export default Component.extend({
     this.sendAction('action', [response.secure_url]);
   },
 
-  error(e) {
+  handleError(e) {
     this.setProperties({
       uploading: false,
       progressPercent: 0,
